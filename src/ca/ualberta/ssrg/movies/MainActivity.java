@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
 		movies = new Movies();
 		moviesViewAdapter = new ArrayAdapter<Movie>(this, R.layout.list_item,movies);
 		movieList.setAdapter(moviesViewAdapter);
-		movieManager = new ESMovieManager("");
+		//movieManager = new ESMovieManager("");
 
 		// Show details when click on a movie
 		movieList.setOnItemClickListener(new OnItemClickListener() {
@@ -75,8 +75,8 @@ public class MainActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		
-		
-
+		Thread thread = new SearchThread();
+		thread.start();
 		// Refresh the list when visible
 		// TODO: Search all
 		
@@ -129,10 +129,25 @@ public class MainActivity extends Activity {
 		startActivity(intent);
 	}
 
-
+	
 	class SearchThread extends Thread {
-		// TODO: Implement search thread
+		ESMovieManager movieManager;
+		Movies movies;
 		
+		public SearchThread() {
+			
+		}
+		@Override
+		public void run() {
+			this.movieManager = new ESMovieManager("");		
+			movies = movieManager.getMovies();
+			System.out.println("test");
+			MainActivity.this.runOnUiThread(new Runnable(){
+				public void run() {
+					 //refresh ui here
+				}
+			});
+		}
 	}
 
 	
